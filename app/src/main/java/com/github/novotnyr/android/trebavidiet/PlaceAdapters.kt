@@ -36,3 +36,24 @@ object PlaceDiff : DiffUtil.ItemCallback<Place>() {
         return oldItem.description == newItem.description
     }
 }
+
+
+class PlaceListAdapter : ListAdapter<Place, PlaceViewHolder>(PlaceDiff) {
+    init {
+        setHasStableIds(true) //<2>
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
+        return PlaceViewHolder(parent) //<3>
+    }
+
+    override fun onBindViewHolder(viewHolder: PlaceViewHolder, position: Int) {
+        val place = getItem(position)
+        viewHolder.bind(place, false) //<4>
+    }
+
+    override fun getItemId(position: Int): Long { //<5>
+        val place = getItem(position)
+        return place.id
+    }
+}
