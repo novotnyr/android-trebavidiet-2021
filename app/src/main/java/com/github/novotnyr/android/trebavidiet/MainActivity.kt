@@ -2,12 +2,17 @@ package com.github.novotnyr.android.trebavidiet
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StableIdKeyProvider
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var placeRecyclerView: RecyclerView
 
     private lateinit var placeListAdapter: PlaceListAdapter
+
+    private lateinit var selectionTracker: SelectionTracker<Long>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +25,12 @@ class MainActivity : AppCompatActivity() {
             submitList(getInitialPlaces())
         }
 
+        selectionTracker = SelectionTracker.Builder("places-selection",
+                placeRecyclerView,
+                StableIdKeyProvider(placeRecyclerView),
+                PlaceDetailsLookup(placeRecyclerView),
+                StorageStrategy.createLongStorage()
+        ).build()
     }
 
     private fun getInitialPlaces() = mutableListOf(
