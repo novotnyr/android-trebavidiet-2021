@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
                 PlaceDetailsLookup(placeRecyclerView),
                 StorageStrategy.createLongStorage()
         ).build()
+
+        placeListAdapter.selectionTracker = selectionTracker
     }
 
     private fun getInitialPlaces() = mutableListOf(
