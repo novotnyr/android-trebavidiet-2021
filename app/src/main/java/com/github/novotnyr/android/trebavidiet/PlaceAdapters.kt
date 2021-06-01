@@ -3,6 +3,7 @@ package com.github.novotnyr.android.trebavidiet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,8 @@ object PlaceDiff : DiffUtil.ItemCallback<Place>() {
 
 
 class PlaceListAdapter : ListAdapter<Place, PlaceViewHolder>(PlaceDiff) {
+    lateinit var selectionTracker: SelectionTracker<Long>
+
     init {
         setHasStableIds(true) //<2>
     }
@@ -49,7 +52,8 @@ class PlaceListAdapter : ListAdapter<Place, PlaceViewHolder>(PlaceDiff) {
 
     override fun onBindViewHolder(viewHolder: PlaceViewHolder, position: Int) {
         val place = getItem(position)
-        viewHolder.bind(place, false) //<4>
+        val isSelected = selectionTracker.isSelected(place.id)
+        viewHolder.bind(place, isSelected) //<4>
     }
 
     override fun getItemId(position: Int): Long { //<5>
