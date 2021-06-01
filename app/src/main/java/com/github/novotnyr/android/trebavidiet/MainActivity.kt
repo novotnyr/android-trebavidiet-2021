@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         ).build()
 
         placeListAdapter.selectionTracker = selectionTracker
+
+        selectionTracker.addObserver(PlaceSelectionObserver(this@MainActivity, selectionTracker))
     }
 
     private fun getInitialPlaces() = mutableListOf(
