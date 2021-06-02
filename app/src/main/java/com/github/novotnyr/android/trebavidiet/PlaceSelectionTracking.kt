@@ -42,7 +42,10 @@ class PlaceSelectionObserver(private val activity: AppCompatActivity,
         }
     }
 
-    override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean = false
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+        mode.menuInflater.inflate(R.menu.place_selection_cab, menu)
+        return true
+    }
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean = false
 
