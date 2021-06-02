@@ -1,7 +1,10 @@
 package com.github.novotnyr.android.trebavidiet
 
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.ItemDetailsLookup.ItemDetails
 import androidx.recyclerview.selection.SelectionTracker
@@ -23,12 +26,30 @@ class PlaceDetailsLookup(private val recyclerView: RecyclerView) : ItemDetailsLo
 
 class PlaceSelectionObserver(private val activity: AppCompatActivity,
                             private val selectionTracker: SelectionTracker<Long>
-) : SelectionTracker.SelectionObserver<Long>() {
+) : SelectionTracker.SelectionObserver<Long>(),
+    ActionMode.Callback {
+
+    private var actionMode: ActionMode? = null
+
     override fun onSelectionChanged() {
         if (selectionTracker.hasSelection()) {
-            activity.title = "Selected: " + selectionTracker.selection.size()
+            if (actionMode == null) {
+                actionMode = activity.startSupportActionMode(this)
+            }
+            actionMode?.title = "Selected: " + selectionTracker.selection.size()
         } else {
-            activity.setTitle(R.string.app_name)
+            actionMode?.finish()
         }
+    }
+
+    override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean = false
+
+    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean = false
+
+    override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean = false
+
+    override fun onDestroyActionMode(mode: ActionMode?) {
+        selectionTracker.clearSelection()
+        actionMode = null
     }
 }
