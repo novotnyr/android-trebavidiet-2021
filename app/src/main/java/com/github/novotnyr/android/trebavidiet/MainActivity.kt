@@ -34,7 +34,11 @@ class MainActivity : AppCompatActivity() {
 
         placeListAdapter.selectionTracker = selectionTracker
 
-        selectionTracker.addObserver(PlaceSelectionObserver(this@MainActivity, selectionTracker))
+        PlaceSelectionObserver(this@MainActivity, selectionTracker)
+                .apply {
+                    onDeleteItemsListener = placeListAdapter::removePlaces
+                    selectionTracker.addObserver(this)
+                }
     }
 
     private fun getInitialPlaces() = mutableListOf(
