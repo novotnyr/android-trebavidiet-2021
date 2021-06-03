@@ -13,13 +13,13 @@ private fun ViewGroup.inflateChild() =
     LayoutInflater
         .from(context)
         .inflate(
-            android.R.layout.simple_list_item_activated_1,
-            this,
-            false
+                android.R.layout.simple_list_item_activated_1,
+                this,
+                false
         )
 
 class PlaceViewHolder(recyclerView: ViewGroup) : RecyclerView.ViewHolder(
-    recyclerView.inflateChild()
+        recyclerView.inflateChild()
 ) {
     fun bind(place: Place, isSelected: Boolean) {
         val textView = itemView as TextView
@@ -59,5 +59,14 @@ class PlaceListAdapter : ListAdapter<Place, PlaceViewHolder>(PlaceDiff) {
     override fun getItemId(position: Int): Long { //<5>
         val place = getItem(position)
         return place.id
+    }
+
+    fun removePlaces(placeIdentifiers: List<Long>) {
+        val placesToRemove = currentList.filter {
+            placeIdentifiers.contains(it.id)
+        }
+        val newPlaces = ArrayList(currentList)
+        newPlaces.removeAll(placesToRemove)
+        submitList(newPlaces)
     }
 }
