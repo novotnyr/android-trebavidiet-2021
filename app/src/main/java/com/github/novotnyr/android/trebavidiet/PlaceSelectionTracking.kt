@@ -27,9 +27,11 @@ class PlaceDetailsLookup(private val recyclerView: RecyclerView) : ItemDetailsLo
 class PlaceSelectionObserver(private val activity: AppCompatActivity,
                             private val selectionTracker: SelectionTracker<Long>
 ) : SelectionTracker.SelectionObserver<Long>(),
-    ActionMode.Callback {
+        ActionMode.Callback {
 
     private var actionMode: ActionMode? = null
+
+    var onDeleteItemsListener: (List<Long>) -> Unit = {}
 
     override fun onSelectionChanged() {
         if (selectionTracker.hasSelection()) {
@@ -49,7 +51,15 @@ class PlaceSelectionObserver(private val activity: AppCompatActivity,
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean = false
 
-    override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean = false
+    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        return if (item.itemId == R.id.placeDeleteMenuItem) {
+            onDeleteItemsListener(selectionTracker.selection.toList())
+            mode.finish()
+            true
+        } else {
+            false
+        }
+    }
 
     override fun onDestroyActionMode(mode: ActionMode?) {
         selectionTracker.clearSelection()
