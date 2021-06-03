@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         selectionTracker = SelectionTracker.Builder("places-selection",
                 placeRecyclerView,
-                StableIdKeyProvider(placeRecyclerView),
+                PlaceItemKeyProvider(placeRecyclerView),
                 PlaceDetailsLookup(placeRecyclerView),
                 StorageStrategy.createLongStorage()
         ).build()

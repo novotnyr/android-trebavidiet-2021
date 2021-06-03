@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.ItemDetailsLookup.ItemDetails
+import androidx.recyclerview.selection.ItemKeyProvider
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
+
 
 class SimpleItemDetails(private val viewHolder: RecyclerView.ViewHolder) : ItemDetails<Long>() {
     override fun getPosition(): Int = viewHolder.adapterPosition
@@ -25,7 +27,7 @@ class PlaceDetailsLookup(private val recyclerView: RecyclerView) : ItemDetailsLo
 }
 
 class PlaceSelectionObserver(private val activity: AppCompatActivity,
-                            private val selectionTracker: SelectionTracker<Long>
+                             private val selectionTracker: SelectionTracker<Long>
 ) : SelectionTracker.SelectionObserver<Long>(),
         ActionMode.Callback {
 
@@ -64,5 +66,19 @@ class PlaceSelectionObserver(private val activity: AppCompatActivity,
     override fun onDestroyActionMode(mode: ActionMode?) {
         selectionTracker.clearSelection()
         actionMode = null
+    }
+}
+
+class PlaceItemKeyProvider(private val recyclerView: RecyclerView)
+    : ItemKeyProvider<Long>(SCOPE_MAPPED) {
+
+    override fun getKey(position: Int): Long {
+        return recyclerView.adapter!!.getItemId(position)
+    }
+
+    override fun getPosition(key: Long): Int {
+        val viewHolder = recyclerView.findViewHolderForItemId(key)
+                ?: return RecyclerView.NO_POSITION
+        return viewHolder.adapterPosition
     }
 }
